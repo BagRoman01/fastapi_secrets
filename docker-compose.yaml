@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:15
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    container_name: db_app
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASS}
+      POSTGRES_DB: ${DATABASE_NAME}
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+  app:
+    image: bagroman/fastapi_repo:latest
+#      context: .               # текущая папка (где Dockerfile)
+#      dockerfile: Dockerfile   # явно указываем имя (по умолчанию тоже Dockerfile)
+    env_file:
+      - .env
+    container_name: test_project
+    command: ["docker_cmds/app.sh"]
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "50m"
+#        max-file: "5"
+    ports:
+      - "${DEPLOY_PORT}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Для постоянного хранения логов приложения (опционально)
+      - app_logs:/test_project/app/logs
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+volumes:
+  db_data:
+  app_logs:
