@@ -9,6 +9,7 @@ services:
       timeout: 5s
     container_name: db_app
     environment:
+      APP_MODE: prod
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASS}
       POSTGRES_DB: ${DATABASE_NAME}
@@ -20,11 +21,9 @@ services:
       - /etc/timezone:/etc/timezone:ro
 
   app:
-    image: bagroman/fastapi_repo:latest
-#      context: .               # текущая папка (где Dockerfile)
-#      dockerfile: Dockerfile   # явно указываем имя (по умолчанию тоже Dockerfile)
-    env_file:
-      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: test_project
     command: ["docker_cmds/app.sh"]
 #    logging:
@@ -32,6 +31,8 @@ services:
 #      options:
 #        max-size: "50m"
 #        max-file: "5"
+    env_file:
+      - .env
     ports:
       - "${DEPLOY_PORT}:8000"
     depends_on:

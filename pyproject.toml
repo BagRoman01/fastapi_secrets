@@ -1,0 +1,131 @@
+[project]
+name = "test-project"
+version = "0.1.0"
+description = "Test project"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "alembic>=1.15.2",
+    "asyncpg>=0.30.0",
+    "bcrypt>=4.3.0",
+    "cryptography>=44.0.2",
+    "fastapi>=0.115.12",
+    "gunicorn>=23.0.0",
+    "httpx>=0.28.1",
+    "passlib>=1.7.4",
+    "psycopg-binary>=3.2.6",
+    "psycopg2-binary>=2.9.10",
+    "pydantic>=2.11.3",
+    "pydantic-settings>=2.9.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+    "pytest-env>=1.1.5",
+    "pyyaml>=6.0.2",
+    "sqlalchemy>=2.0.40",
+    "sqlmodel>=0.0.24",
+    "uvicorn>=0.34.2",
+]
+
+[tool.black]
+# Отключаем нормализацию кавычек, чтобы оставить их на откуп Ruff
+skip-string-normalization = true
+line-length = 120
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | build
+  | dist
+  | migrations
+)/
+'''
+
+[tool.ruff]
+# Держим ту же длину строки, что и Black
+line-length = 120
+# Отключаем preview, если не нужны экспериментальные правила
+preview = false
+
+[tool.ruff.format]
+# При автофиксе все строки приводим к одинарным кавычкам
+quote-style = "single"
+
+[tool.ruff.lint]
+# Включаем базовые (стабильные) правила
+select = ["E", "F", "W", "C", "ANN", "UP", "RUF", "RET"]
+
+# Игнорируем только то, что реально мешает вашему проекту
+ignore = [
+    "C408",    # Unnecessary `dict` call
+    "PLR2004", # Magic value used in comparison (если не нужен)
+    "RET504",  # Unnecessary variable assignment before `return` statement
+    "RUF002",  # Docstring содержит неочевидный юникод (если не планируете фиксить сразу)
+    "RUF003",  # Comment содержит неочевидный юникод
+    "UP006",   # Use `list` вместо `List` в аннотациях (если вы пока пишете старым стилем)
+    "UP007"    # Use X | Y вместо Union[X, Y]
+]
+
+[tool.ruff.lint.isort]
+# Не комбинировать импорты с alias-ами, обязательно по одной строке
+combine-as-imports = false
+force-single-line = true
+# Указываем реальное имя «first-party» — например, папка app
+known-first-party = ["app"]
+order-by-type = true
+
+[tool.ruff.lint.per-file-ignores]
+# В тестах можно смело использовать assert, без ругани S101
+"tests/*" = ["S101"]
+
+[tool.ruff.lint.flake8-quotes]
+# Явно указываем, что для docstring будем использовать тройные двойные кавычки
+docstring-quotes = "double"
+# А встроенные (inline) строки — одинарные кавычки
+inline-quotes = "single"
+
+[tool.mypy]
+python_version = "3.10"              # Указываем версию Python, которую будет учитывать mypy при проверке типов
+
+check_untyped_defs = true            # Проверять функции/методы без аннотаций (ловит ошибки даже если типы не указаны)
+
+disallow_untyped_defs = true         # Запрещать функции/методы без аннотаций типов (мягко заставляет аннотировать код)
+
+ignore_missing_imports = true        # Не ругаться на импорты библиотек без собственных type stub'ов (например, старые или слабо типизированные сторонние пакеты)
+
+strict_optional = true               # Строго следить за использованием None (например, Optional[str] ≠ str)
+
+show_error_codes = true              # Показывать коды ошибок mypy (удобно для поиска и фильтрации проблем)
+
+warn_unused_ignores = true           # Предупреждать, если где-то указан # type: ignore, а он не нужен
+
+warn_redundant_casts = true          # Предупреждать, если используется лишний или ненужный cast
+
+warn_unused_configs = true           # Предупреждать о неиспользуемых/лишних настройках в конфиге mypy
+
+pretty = true                        # Красивый, более читабельный вывод ошибок mypy
+
+
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "mypy>=1.16.0",
+    "ruff>=0.11.12",
+]
+
+[tool.pytest_env]
+APP_MODE="test"
+
+#multiline-quotes = "single"
+
+# Test
+# black --diff --color .
+# ruff check --diff . | colordiff
+
+# Fix
+# black . --exclude "pgdata"
+# ruff check --fix .
+
+# Run
+# uvicorn --reload --host $HOST --port $PORT --log-level $LOG_LEVEL --log-config log_config.json
