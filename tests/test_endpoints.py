@@ -93,6 +93,7 @@ async def test_unlock_secret_wrong_password(async_client):
 
 
 async def test_unlock_secret_twice(async_client):
+    """Тест на невозможность повторного открытия секрета"""
     create_response = await async_client.post(
         '/generate', json={'secret': 'one_time_secret', 'password': 'pwd'},
     )

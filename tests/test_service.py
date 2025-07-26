@@ -10,6 +10,7 @@ pytestmark = pytest.mark.asyncio(loop_scope='session')
 
 
 async def test_empty_secret_create(secret_service):
+    """Тест на попытку создания пустого секрета"""
     with pytest.raises(ValidationError) as exc_info:
         secret = await secret_service.create_secret(
             create_secret=SecretCreate(secret='', password='pwd'),
@@ -38,6 +39,7 @@ async def test_short_password_create(secret_service):
 
 
 async def test_create_secret(secret_service, test_uow):
+    """Тест на создание секрета"""
     secret = await secret_service.create_secret(
         create_secret=SecretCreate(secret='secret', password='pwd'),
     )
@@ -79,6 +81,7 @@ async def test_unsecret_with_wrong_password(secret_service, test_uow):
 
 
 async def test_unlock_secret(secret_service, test_uow):
+    """Тест на правильность открытия секрета"""
     secret = await secret_service.create_secret(
         create_secret=SecretCreate(secret='new_secret', password='my_pwd'),
     )

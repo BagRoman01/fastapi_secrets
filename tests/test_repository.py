@@ -8,6 +8,7 @@ pytestmark = pytest.mark.asyncio(loop_scope='session')
 
 
 async def test_create_and_get_secret(session_factory):
+    """Тест создания и получения секрета"""
     db_session = session_factory()
     repo = SecretRepository(db_session)
     secret_data = SecretCreate(secret='secret', password='password')
