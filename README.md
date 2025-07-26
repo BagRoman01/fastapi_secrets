@@ -14,15 +14,39 @@ REST API-сервис для безопасного хранения и одно
 
 ## 🧱 Стек технологий
 
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [SQLAlchemy](https://docs.sqlalchemy.org/)
-- [SQLModel] (https://sqlmodel.tiangolo.com/about/)
-- [pytest] (https://pypi.org/project/pytest/)
-- [Docker](https://docs.docker.com/compose/)
-- [uv](https://github.com/astral-sh/uv) — менеджер зависимостей
-- [ruff] (https://docs.astral.sh/ruff/)
-- [mypy] https://mypy-lang.org/
+### ⚙️ Backend
+
+* **[FastAPI](https://fastapi.tiangolo.com/)** – современный веб-фреймворк на Python для создания высокопроизводительных REST API
+* **[SQLAlchemy](https://www.sqlalchemy.org/)** / **[SQLModel](https://sqlmodel.tiangolo.com/)** – ORM и декларативная работа с моделями
+* **[Pydantic v2](https://docs.pydantic.dev/)** – валидация и сериализация данных
+* **[Alembic](https://alembic.sqlalchemy.org/)** – миграции схемы базы данных
+* **[Asyncpg](https://github.com/MagicStack/asyncpg)** – высокопроизводительный асинхронный драйвер PostgreSQL
+* **[Aiosqlite](https://github.com/omnilib/aiosqlite)** – асинхронный драйвер для SQLite (используется при тестировании)
+
+### 🔒 Безопасность
+
+* **[Passlib](https://passlib.readthedocs.io/)** + **[bcrypt](https://pypi.org/project/bcrypt/)** – безопасное хеширование паролей
+* **[Cryptography](https://cryptography.io/)** – криптографические функции и шифрование
+
+### 🧪 Тестирование
+
+* **[Pytest](https://docs.pytest.org/)** – фреймворк для написания тестов
+* **[Pytest-asyncio](https://github.com/pytest-dev/pytest-asyncio)** – поддержка асинхронных тестов
+* **[Httpx](https://www.python-httpx.org/)** – асинхронный HTTP-клиент, используется для тестов API
+
+### 🚀 Запуск и деплой
+
+* **[Uvicorn](https://www.uvicorn.org/)** – быстрый ASGI-сервер для разработки
+* **[Gunicorn](https://gunicorn.org/)** – сервер для продакшн-развёртывания
+* **[Docker + Docker Compose](https://docs.docker.com/compose/)** – контейнеризация приложения и БД
+* **[uv](https://github.com/astral-sh/uv)** – современный и быстрый менеджер зависимостей (альтернатива pip)
+
+### 🧹 Статический анализ и стиль кода
+
+* **[Ruff](https://docs.astral.sh/ruff/)** – сверхбыстрый линтер и автоформаттер Python-кода
+* **[Mypy](https://mypy-lang.org/)** – проверка типов на основе аннотаций
+* **[Black](https://black.readthedocs.io/)** – автоформаттер для кода с чётким стилевым стандартом
+
 ---
 
 ## 🚀 Быстрый старт (Docker)
