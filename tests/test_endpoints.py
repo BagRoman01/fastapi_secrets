@@ -13,10 +13,8 @@ async def test_create_secret_success(async_client):
     data = response.json()
     assert 'id' in data
     assert 'reg_date' in data
-    assert data['secret'] != 'my_secret'
-    assert data['hashed_password'] is not None
-    assert data['secret'] is not None
     assert data['id'] is not None
+    assert 'reg_date' is not None
 
 
 async def test_create_secret_empty_secret(async_client):

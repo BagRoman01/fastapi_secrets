@@ -2,7 +2,7 @@ import pytest
 from pydantic import ValidationError
 
 from app.models.schemas.secret import SecretCreate
-from app.models.schemas.secret import SecretUnlockData
+from app.models.schemas.secret import SecretUnlockPassword
 from app.services.exceptions.exceptions import SecretNotFoundException
 from app.services.exceptions.exceptions import WrongSecretPasswordException
 
@@ -53,9 +53,8 @@ async def test_unsecret_id_not_found(secret_service):
     """Тест проверяет вызов SecretNotFoundException при попытке открыть несуществующий секрет"""
     with pytest.raises(SecretNotFoundException):
         await secret_service.unsecret(
-            SecretUnlockData(
-                id='00000000-0000-0000-0000-000000000000', password='any_pwd',
-            ),
+            secret_id='00000000-0000-0000-0000-000000000000',
+            secret_data=SecretUnlockPassword(password='any_pwd'),
         )
 
 
@@ -69,7 +68,8 @@ async def test_unsecret_with_wrong_password(secret_service, test_uow):
     # Пытаемся открыть с неверным паролем
     with pytest.raises(WrongSecretPasswordException):
         await secret_service.unsecret(
-            SecretUnlockData(id=secret.id, password='wrong_pwd'),
+            secret_id=secret.id,
+            secret_data=SecretUnlockPassword(password='any_pwd'),
         )
 
     # Проверяем, что секрет остался в БД (не удалился при неверном пароле)
@@ -87,8 +87,10 @@ async def test_unlock_secret(secret_service, test_uow):
     )
     assert secret is not None, 'Секрет не был создан'
     data = await secret_service.unsecret(
-        SecretUnlockData(id=secret.id, password='my_pwd'),
+            secret_id=secret.id,
+            secret_data=SecretUnlockPassword(password='my_pwd'),
     )
+
     assert data is not None, 'Получены пустые данные при открытии секрета'
     assert (
         data.reg_date == secret.reg_date
