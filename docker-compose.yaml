@@ -26,11 +26,6 @@ services:
       dockerfile: Dockerfile
     container_name: test_project
     command: ["docker_cmds/app.sh"]
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "50m"
-#        max-file: "5"
     env_file:
       - .env
     ports:

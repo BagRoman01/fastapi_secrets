@@ -15,13 +15,14 @@ class SecretBase(SQLModel):
 
 class SecretCreate(SQLModel):
     secret: constr(min_length=1, max_length=65536)
-    password: constr(min_length=3, max_length=64)
+    password: constr(min_length=3, max_length=64) 
 
 
 class SecretWithData(SecretBase):
     secret: str | None = None
 
+class SecretResponse(SecretBase):
+    id: str 
 
-class SecretUnlockData(SQLModel):
-    id: str
-    password: constr(min_length=3, max_length=64)
+class SecretUnlockPassword(SQLModel):
+    password: constr(min_length=3, max_length=64) # type: ignore

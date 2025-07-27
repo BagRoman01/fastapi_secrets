@@ -15,3 +15,7 @@ class SecretNotFoundException(CustomHTTPException):
 class WrongSecretPasswordException(CustomHTTPException):
     def __init__(self, detail: str = 'Wrong password for the secret!'):
         super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
+
+class ErrorDecryptSecretException(CustomHTTPException):
+    def __init__(self, detail: str = 'Could not decrypt secret!'):
+        super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
