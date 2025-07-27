@@ -9,6 +9,7 @@ pytestmark = pytest.mark.asyncio(loop_scope='session')
 
 
 async def test_uow_commit(test_uow):
+    """Тестирование коммита uow"""
     async with test_uow as uow:
         new_secret = SecretCreate(secret='my_secret', password='PASSWORD')
         secret = await uow.secret_repo.create(
@@ -30,6 +31,7 @@ async def test_uow_commit(test_uow):
 
 
 async def test_uow_rollback(test_uow):
+    """Тестирование отката uow"""
     async with test_uow as uow:
         new_secret = SecretCreate(secret='my_secret', password='PASSWORD')
         secret = await uow.secret_repo.create(
