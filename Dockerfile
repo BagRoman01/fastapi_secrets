@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 RUN pip install --no-cache-dir uv
 
-WORKDIR /test_project
+WORKDIR /fastapi_secrets
 
 COPY pyproject.toml .
 COPY uv.lock .

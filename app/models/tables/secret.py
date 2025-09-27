@@ -1,16 +1,14 @@
 from datetime import datetime
-
+import uuid
 from sqlmodel import Field
-
-from app.core.security import get_password_hash
 from app.models.schemas.secret import SecretBase
 from app.models.schemas.secret import SecretCreate
-from app.models.schemas.secret import generate_uuid
+from app.services.security import crypto_service
 
 
 class Secret(SecretBase, table=True):
     id: str | None = Field(
-        default_factory=generate_uuid, primary_key=True, index=True, nullable=False,
+        default_factory=lambda: str(str(uuid.uuid4())), primary_key=True, index=True, nullable=False,
     )
     secret: str = Field(nullable=False, max_length=65536)
     hashed_password: str = Field(nullable=False, max_length=64)
@@ -19,7 +17,7 @@ class Secret(SecretBase, table=True):
     @staticmethod
     def from_secret_create(secret_create: SecretCreate) -> 'Secret':
 
-        hashed_password = get_password_hash(secret_create.password)
+        hashed_password = crypto_service().hash_password(secret_create.password)
         reg_date = str(datetime.now().isoformat())
 
         s = Secret(

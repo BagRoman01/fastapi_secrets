@@ -10,9 +10,6 @@ services:
     container_name: db_app
     environment:
       APP_MODE: prod
-      POSTGRES_USER: ${DATABASE_USER}
-      POSTGRES_PASSWORD: ${DATABASE_PASS}
-      POSTGRES_DB: ${DATABASE_NAME}
     env_file:
       - .env
     volumes:
@@ -25,7 +22,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: test_project
-    command: ["docker_cmds/app.sh"]
+    command: ["/bin/bash", "./docker_cmds/app.sh"]
     env_file:
       - .env
     ports:

@@ -1,13 +1,12 @@
 import logging
 import logging.config  # Добавляем этот импорт
 import os
-
 import yaml
 
 log = logging.getLogger(__name__)
 
 
-def setup_logging(default_path='./logging.yaml', default_level=logging.DEBUG):
+def setup_logging(default_path='./../logging.yaml', default_level=logging.DEBUG):
     """Функция для загрузки конфигурации логирования из файла YAML"""
     absolute_path = os.path.abspath(default_path)
     log.info(f'Путь к конфигурационному файлу logging: {absolute_path}')

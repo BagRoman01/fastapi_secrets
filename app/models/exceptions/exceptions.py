@@ -1,6 +1,10 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, FastAPI
 from starlette import status
-
+from fastapi import FastAPI
+from fastapi import HTTPException
+from fastapi.exceptions import RequestValidationError
+from app.base.exc_handlers import http_exception_handler
+from app.base.exc_handlers import validation_exception_handler
 
 class CustomHTTPException(HTTPException):
     def __init__(self, status_code: int, detail: str):
@@ -19,3 +23,7 @@ class WrongSecretPasswordException(CustomHTTPException):
 class ErrorDecryptSecretException(CustomHTTPException):
     def __init__(self, detail: str = 'Could not decrypt secret!'):
         super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail=detail)
+
+def register_exception_handlers(app: FastAPI):
+    app.add_exception_handler(HTTPException, http_exception_handler)
+    app.add_exception_handler(RequestValidationError, validation_exception_handler)

@@ -10,7 +10,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.main import app
 from app.models.schemas.secret import SecretBase
 from app.services.secret import SecretService
-from app.utils.uow import UnitOfWork
+from app.base.uow import UnitOfWork
 
 
 @pytest_asyncio.fixture(loop_scope='session', scope='session')

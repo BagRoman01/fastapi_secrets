@@ -1,7 +1,6 @@
 import os
 from typing import List
 from pydantic import ValidationError
-from pydantic import field_validator
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 
@@ -17,18 +16,11 @@ class Settings(BaseSettings):
     # поля
     DATABASE_HOST: str
     DATABASE_PORT: str
-    DATABASE_USER: str
-    DATABASE_PASS: str
-    DATABASE_NAME: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
 
-    CORS_ORIGINS: List[str] | str
-
-    @field_validator('CORS_ORIGINS', mode='before')
-    @classmethod
-    def parse_cors_origins(cls, v):
-        if isinstance(v, str):
-            return [url.strip().rstrip('/') for url in v.split(',') if url]
-        return v
+    CORS_ORIGINS: List[str]
 
     DEPLOY_HOST: str
     DEPLOY_PORT: int
@@ -37,8 +29,8 @@ class Settings(BaseSettings):
     def ASYNC_DATABASE_URL(self) -> str:
         return (
             f'postgresql+asyncpg://'
-            f'{self.DATABASE_USER}:{self.DATABASE_PASS}'
-            f'@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}'
+            f'{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'
+            f'@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.POSTGRES_DB}'
         )
 
     def __init__(self, **kwargs):
