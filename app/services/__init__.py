@@ -1,8 +1,8 @@
 from fastapi import Depends
-from app.base.uow import UnitOfWork, IUnitOfWork
+from app.database.repositories import SecretRepository, secret_repository
 from app.services.secret import SecretService
 
-def secret_service(uow: IUnitOfWork = Depends(UnitOfWork)) -> SecretService:
-    return SecretService(uow)
+def secret_service(repo: SecretRepository = Depends(secret_repository)) -> SecretService:
+    return SecretService(repo)
 
 

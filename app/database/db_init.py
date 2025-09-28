@@ -10,6 +10,12 @@ log = logging.getLogger(__name__)
 
 engine = create_async_engine(settings.ASYNC_DATABASE_URL)
 log.info(f'Создаем engine с {settings.ASYNC_DATABASE_URL}')
+
 async_session_maker = async_sessionmaker(
     engine, class_=AsyncSession, expire_on_commit=False,
 )
+
+
+async def get_session():
+    async with async_session_maker() as session:
+        yield session
