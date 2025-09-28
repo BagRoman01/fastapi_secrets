@@ -2,8 +2,8 @@
 
 import pytest
 
-from app.models.schemas.secret import SecretCreate
-from app.models.tables.secret import Secret
+from src.models.schemas.secret import SecretCreate
+from src.models.tables.secret import Secret
 
 pytestmark = pytest.mark.asyncio(loop_scope='session')
 

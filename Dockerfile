@@ -11,7 +11,7 @@ RUN uv sync --no-cache-dir
 
 COPY . .
 
-# Остаёмся в /test_project, где лежит папка app
+# Остаёмся в /test_project, где лежит папка src
 RUN chmod a+x docker_cmds/*.sh
 
 

@@ -1,5 +1,5 @@
 
-from app.config import Settings
+from src.config import Settings
 
 
 def test_settings_successful_creation():

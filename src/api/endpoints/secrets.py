@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 from fastapi import Depends
 
-from app.models.schemas.secret import (
+from src.models.schemas.secret import (
     SecretUnlockPassword,
     SecretWithData,
     SecretCreate,
     SecretResponse
 )
-from app.services.secret import SecretService
-from app.services.__init__ import secret_service
+from src.services.secret import SecretService
+from src.services.__init__ import secret_service
 
 router = APIRouter()
 

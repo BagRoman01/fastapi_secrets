@@ -32,7 +32,7 @@ services:
         condition: service_healthy
     volumes:
       # Для постоянного хранения логов приложения (опционально)
-      - app_logs:/test_project/app/logs
+      - app_logs:/test_project/src/logs
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
 

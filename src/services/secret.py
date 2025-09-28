@@ -1,16 +1,16 @@
 import logging
 from fastapi import Depends
-from app.database.repositories import SecretRepository
-from app.services.security import CryptoService
-from app.services.security import crypto_service
-from app.models.exceptions.exceptions import (
+from src.database.repositories import SecretRepository
+from src.services.security import CryptoService
+from src.services.security import crypto_service
+from src.models.exceptions.exceptions import (
     SecretNotFoundException,
     WrongSecretPasswordException, \
     ErrorDecryptSecretException)
-from app.models.schemas.secret import SecretCreate, SecretResponse
-from app.models.schemas.secret import SecretWithData
-from app.models.tables.secret import Secret
-from app.models.schemas.secret import SecretUnlockPassword
+from src.models.schemas.secret import SecretCreate, SecretResponse
+from src.models.schemas.secret import SecretWithData
+from src.models.tables.secret import Secret
+from src.models.schemas.secret import SecretUnlockPassword
 
 class SecretService:
     def __init__(self, repo: SecretRepository):

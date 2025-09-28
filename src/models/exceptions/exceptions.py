@@ -3,8 +3,8 @@ from starlette import status
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi.exceptions import RequestValidationError
-from app.base.exc_handlers import http_exception_handler
-from app.base.exc_handlers import validation_exception_handler
+from src.base.exc_handlers import http_exception_handler
+from src.base.exc_handlers import validation_exception_handler
 
 class CustomHTTPException(HTTPException):
     def __init__(self, status_code: int, detail: str):

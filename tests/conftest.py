@@ -7,10 +7,10 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlmodel import text
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.main import app
-from app.models.schemas.secret import SecretBase
-from app.services.secret import SecretService
-from app.base.uow import UnitOfWork
+from src.main import app
+from src.models.schemas.secret import SecretBase
+from src.services.secret import SecretService
+from src.base.uow import UnitOfWork
 
 
 @pytest_asyncio.fixture(loop_scope='session', scope='session')

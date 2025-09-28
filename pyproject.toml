@@ -70,7 +70,7 @@ ignore = [
 # Не комбинировать импорты с alias-ами, обязательно по одной строке
 combine-as-imports = false
 force-single-line = true
-# Указываем реальное имя «first-party» — например, папка app
+# Указываем реальное имя «first-party» — например, папка src
 known-first-party = ["app"]
 order-by-type = true
 

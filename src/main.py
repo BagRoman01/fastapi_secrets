@@ -2,10 +2,10 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from app.api import api_router
-from app.baselogs_setup import setup_logging
-from app.config import settings
-from app.models.exceptions.exceptions import register_exception_handlers
+from src.api import api_router
+from src.baselogs_setup import setup_logging
+from src.config import settings
+from src.models.exceptions.exceptions import register_exception_handlers
 
 setup_logging()
 log = logging.getLogger(__name__)

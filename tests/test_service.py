@@ -1,9 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
-from app.models.exceptions.exceptions import SecretNotFoundException, WrongSecretPasswordException
-from app.models.schemas.secret import SecretCreate
-from app.models.schemas.secret import SecretUnlockPassword
+from src.models.exceptions.exceptions import SecretNotFoundException, WrongSecretPasswordException
+from src.models.schemas.secret import SecretCreate
+from src.models.schemas.secret import SecretUnlockPassword
 
 pytestmark = pytest.mark.asyncio(loop_scope='session')
 

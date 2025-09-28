@@ -1,9 +1,9 @@
 from datetime import datetime
 import uuid
 from sqlmodel import Field
-from app.models.schemas.secret import SecretBase
-from app.models.schemas.secret import SecretCreate
-from app.services.security import crypto_service
+from src.models.schemas.secret import SecretBase
+from src.models.schemas.secret import SecretCreate
+from src.services.security import crypto_service
 
 
 class Secret(SecretBase, table=True):
