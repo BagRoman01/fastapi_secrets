@@ -1,21 +1,22 @@
-from pydantic import constr
-from sqlmodel import SQLModel
-
+from sqlmodel import SQLModel, Field
+from datetime import datetime
 
 class SecretBase(SQLModel):
-    reg_date: str | None = None
+    reg_date: datetime | None = None
 
 
 class SecretCreate(SQLModel):
-    secret: constr(min_length=1, max_length=65536)
-    password: constr(min_length=3, max_length=64)
+    secret: str = Field(..., min_length=1, max_length=65536)
+    password: str = Field(..., min_length=3, max_length=64)
 
 
-class SecretWithData(SecretBase):
+class SecretPublicView(SecretBase):
     secret: str | None = None
 
-class SecretResponse(SecretBase):
+
+class SecretInfo(SecretBase):
     id: str
 
-class SecretUnlockPassword(SQLModel):
-    password: constr(min_length=3, max_length=64) # type: ignore
+
+class SecretUnlock(SQLModel):
+    password: str = Field(..., min_length=3, max_length=64)

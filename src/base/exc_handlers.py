@@ -10,4 +10,5 @@ async def validation_exception_handler(request, exc):
 
 
 async def http_exception_handler(request, exc):
-    return JSONResponse(status_code=exc.status_code, content={'errors': exc.detail})
+    return JSONResponse(status_code=exc.status_code,
+                        content={'errors': exc.detail})

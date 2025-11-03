@@ -41,25 +41,23 @@ class BaseRepository(Generic[ModelType, CreateModelType, UpdateModelType]):
 
     async def check_database_connection(self) -> bool:
         try:
-            # Используем text() для создания текстового SQL-выражения
             result = await self.db.exec(text('SELECT 1'))
 
-            # Получаем первый результат
             row = result.scalar()
 
-            # Проверяем, равен ли результат 1
             return row == 1
 
         except Exception as e:
-            # В случае ошибки выводим сообщение и возвращаем False
             logger.error(f'Error connecting to database: {e!s}')
             return False
 
     async def get_by_id(self, itm_id: Any) -> ModelType | None:
-        result = await self.db.exec(select(self.model).where(self.model.id == itm_id))
+        result = await self.db.exec(select(self.model)
+                                    .where(self.model.id == itm_id))
         return result.one_or_none()
 
-    async def get_multi(self, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
+    async def get_multi(self, *, skip: int = 0, limit: int = 100) \
+            -> list[ModelType]:
         result = await self.db.exec(select(self.model).offset(skip).limit(limit))
         return list(result.fetchall())
 
@@ -71,7 +69,11 @@ class BaseRepository(Generic[ModelType, CreateModelType, UpdateModelType]):
         await self.db.refresh(db_obj)
         return db_obj
 
-    async def create_multi(self, *, obj_in: list[CreateModelType]) -> list[ModelType]:
+    async def create_multi(
+            self,
+            *,
+            obj_in: list[CreateModelType]
+    ) -> list[ModelType]:
         db_objs = [self.model(**obj.model_dump()) for obj in obj_in]
         self.db.add_all(db_objs)
         await self.db.flush()
@@ -93,7 +95,9 @@ class BaseRepository(Generic[ModelType, CreateModelType, UpdateModelType]):
                     update_data[field], dict,
                 ):
                     setattr(
-                        db_obj, field, merge_dicts(obj_data[field], update_data[field]),
+                        db_obj,
+                        field,
+                        merge_dicts(obj_data[field], update_data[field]),
                     )
                 else:
                     setattr(db_obj, field, update_data[field])
