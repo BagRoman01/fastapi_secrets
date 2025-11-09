@@ -66,10 +66,3 @@ class CryptoService:
         key = self._gen_key_from_password(password, salt)
         f = Fernet(key)
         return f.decrypt(encrypted_message).decode()
-
-
-def crypto_service(
-        iterations: int = 100_000,
-        hash_algorithm=hashes.SHA256
-) -> CryptoService:
-    return CryptoService(iterations, hash_algorithm)

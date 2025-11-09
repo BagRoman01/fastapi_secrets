@@ -12,6 +12,12 @@ RUN uv sync --no-cache-dir
 COPY . .
 
 # Остаёмся в /test_project, где лежит папка src
-RUN chmod a+x docker_cmds/*.sh
+RUN uv run gunicorn src.main:app \
+  --workers 4 \
+  --worker-class uvicorn.workers.UvicornWorker \
+  --bind 0.0.0.0:8000 \
+  --log-level debug \
+  --access-logfile - \
+  --error-logfile -
 
 

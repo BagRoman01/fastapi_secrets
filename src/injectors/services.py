@@ -1,17 +1,12 @@
-from src.database.repositories.secret_repository import SecretRepository
-from src.injectors.repositories import repository_injector
-from src.services.security import CryptoService
-from src.services.secret import SecretService
-from fastapi import Depends
+from typing import AsyncGenerator, Any
+from src.injectors.pg import AsyncPgConnectionInj
+from src.services import SecretService, CryptoService
 
-class ServiceInjector:
-    def __init__(self):
+class AsyncServiceInjector:
+    def __init__(self, conns: AsyncPgConnectionInj):
         self.crypto_service = CryptoService()
+        self._conns = conns
 
-    async def get_secret_service(
-        self,
-        secret_repo: SecretRepository = Depends(repository_injector.get_secret_repository),
-    ) -> SecretService:
-        return SecretService(secret_repo, self.crypto_service)
-
-services_injector = ServiceInjector()
+    async def secrets(self) -> AsyncGenerator[SecretService, Any]:
+        async with self._conns.acquire_session() as session:
+            yield SecretService(session, self.crypto_service)

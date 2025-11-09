@@ -1,7 +1,6 @@
 import os
 from pydantic import ValidationError
-from pydantic_settings import BaseSettings
-from pydantic_settings import SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -23,14 +22,6 @@ class Settings(BaseSettings):
     DEPLOY_HOST: str
     DEPLOY_PORT: int
 
-    @property
-    def ASYNC_DATABASE_URL(self) -> str:
-        return (
-            f'postgresql+asyncpg://'
-            f'{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}'
-            f'@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.POSTGRES_DB}'
-        )
-
     def __init__(self, **kwargs):
         env = os.getenv('APP_MODE', 'dev')
         print("РЕЖИМ: " + env)
@@ -40,7 +31,6 @@ class Settings(BaseSettings):
 
 
 try:
-    # os.environ['APP_MODE'] = 'test'
     settings = Settings()
 except ValidationError as e:
     print('Ошибка в настройках. Проверьте файл или переменные окружения:')

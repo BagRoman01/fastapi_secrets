@@ -1,23 +1,20 @@
-from fastapi import APIRouter
-from fastapi import Depends
-
-from src.models.schemas.secret import (
+from fastapi import APIRouter, Depends
+from src.injectors import acquire_services
+from src.models import (
     SecretUnlock,
     SecretPublicView,
-    SecretCreate,
+    SecretCreation,
     SecretInfo
 )
-from src.services.secret import SecretService
-from src.injectors.__init__ import services
+from src.services import SecretService
 
 router = APIRouter()
-
 
 @router.post('/{secret_id}/unlock')
 async def unsecret(
     secret_id: str,
     secret_unlock: SecretUnlock,
-    secret_srv: SecretService = Depends(services),
+    secret_srv: SecretService = Depends(acquire_services().secrets),
 ) -> SecretPublicView:
     """Reads the secret and then deletes it."""
     return await secret_srv.unsecret(
@@ -28,9 +25,8 @@ async def unsecret(
 
 @router.post('')
 async def create_secret(
-    *,
-    secret_srv: SecretService = Depends(services),
-    secret_create: SecretCreate,
+    secret_create: SecretCreation,
+    secret_srv: SecretService = Depends(acquire_services().secrets),
 ) -> SecretInfo:
     """Create new secret with given credentials."""
-    return await secret_srv.create_secret(create_secret=secret_create)
+    return await secret_srv.create_secret(secret_creation=secret_create)

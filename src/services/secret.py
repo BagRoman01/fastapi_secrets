@@ -1,36 +1,40 @@
-import logging
-
-from src.database.repositories.secret_repository import SecretRepository
-from src.services.security import CryptoService
-from src.base.exceptions import (
+from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlmodel import select
+from src.services import CryptoService
+from src.base import (
     SecretNotFoundException,
-    WrongSecretPasswordException, \
-    ErrorDecryptSecretException)
-from src.models.schemas.secret import SecretCreate, SecretInfo
-from src.models.schemas.secret import SecretPublicView
-from src.models.tables.secret import Secret
-from src.models.schemas.secret import SecretUnlock
+    WrongSecretPasswordException,
+    ErrorDecryptSecretException
+)
+from src.models import (
+    SecretCreation,
+    SecretInfo,
+    Secret,
+    SecretPublicView,
+    SecretUnlock
+)
 
 class SecretService:
-    def __init__(self, repo: SecretRepository, crypto: CryptoService):
-        self._logger = logging.getLogger(__name__)
+    def __init__(self, session: AsyncSession, crypto: CryptoService):
         self._crypto_service: CryptoService = crypto
-        self._secret_repository: SecretRepository = repo
+        self._db = session
 
     async def create_secret(
             self,
-            *,
-            create_secret: SecretCreate
+            secret_creation: SecretCreation
     ) -> SecretInfo:
         """Create new secret with given credentials.
         """
-        create_secret.secret = self._crypto_service.encrypt_secret(
-            create_secret.secret, create_secret.password,
+        secret_creation.secret = self._crypto_service.encrypt_secret(
+            secret_creation.secret,
+            secret_creation.password
         )
-        s: Secret = Secret.from_create(create_secret)
-        new_secret = await self._secret_repository.create(obj_in=s)
+        s: Secret = Secret.from_create(secret_creation)
+        self._db.add(s)
+        await self._db.flush()
+        await self._db.refresh(s)
+        await self._db.commit()
         res: SecretInfo = SecretInfo(reg_date=s.reg_date, id=s.id)
-        await self._secret_repository.db.commit()
         return res
 
     async def unsecret(
@@ -38,24 +42,35 @@ class SecretService:
             secret_id: str,
             secret_data: SecretUnlock
     ) -> SecretPublicView:
-        secret = await self._secret_repository.get_by_id(secret_id)
+        result = await self._db.exec(
+            select(Secret).where(Secret.id == secret_id)
+        )
+        secret = result.one_or_none()
+
         if not secret:
             raise SecretNotFoundException
 
-        if not self._crypto_service.verify_password(secret_data.password,
-                                                    secret.hashed_password):
+        if not self._crypto_service.verify_password(
+                secret_data.password,
+                secret.hashed_password
+        ):
             raise WrongSecretPasswordException
 
-        data = SecretPublicView(reg_date=secret.reg_date, secret=secret.secret)
+        data = SecretPublicView(
+            reg_date=secret.reg_date,
+            secret=secret.secret
+        )
 
         try:
             data.secret = self._crypto_service.decrypt_secret(
                 secret.secret,
-                secret_data.password)
+                secret_data.password
+            )
         except Exception as e:
             raise ErrorDecryptSecretException
 
-        await self._secret_repository.delete(itm_id=secret.id)
-        await self._secret_repository.db.commit()
+        await self._db.delete(secret)
+        await self._db.commit()
+
         return data
 

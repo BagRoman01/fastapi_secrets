@@ -8,7 +8,7 @@ from sqlmodel import text
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.main import app
-from src.models.schemas.secret import SecretBase
+from src.models.secret import SecretBase
 from src.services.secret import SecretService
 from src.base.uow import UnitOfWork
 

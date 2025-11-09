@@ -1,5 +1,4 @@
-import logging
-import logging.config  # Добавляем этот импорт
+import logging.config
 import os
 import yaml
 
