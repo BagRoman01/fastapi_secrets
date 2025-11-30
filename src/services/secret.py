@@ -23,8 +23,7 @@ class SecretService:
             self,
             secret_creation: SecretCreation
     ) -> SecretInfo:
-        """Create new secret with given credentials.
-        """
+        """Создание нового секрета с паролем."""
         secret_creation.secret = self._crypto_service.encrypt_secret(
             secret_creation.secret,
             secret_creation.password
@@ -42,6 +41,7 @@ class SecretService:
             secret_id: str,
             secret_data: SecretUnlock
     ) -> SecretPublicView:
+        """Раскрытие секрета по его ID и паролю"""
         result = await self._db.exec(
             select(Secret).where(Secret.id == secret_id)
         )

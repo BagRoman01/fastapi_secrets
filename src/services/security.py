@@ -10,7 +10,7 @@ class CryptoService:
     def __init__(
             self,
             iterations: int = 100_000,
-            hash_algorithm=hashes.SHA256
+            hash_algorithm = hashes.SHA256
     ):
         self._pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
         self._iterations = iterations

@@ -1,16 +1,22 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi import HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette import status
 
-async def validation_exception_handler(request, exc):
+async def validation_exception_handler(
+    request: Request,
+    exc: RequestValidationError
+) -> JSONResponse:
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={'message': 'Invalid input', 'errors': exc.errors()}
     )
 
-async def http_exception_handler(request, exc):
+async def http_exception_handler(
+    request: Request,
+    exc: HTTPException
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={'errors': exc.detail}

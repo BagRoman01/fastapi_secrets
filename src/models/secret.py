@@ -38,10 +38,7 @@ class Secret(SecretBase, table=True):
 
     @classmethod
     def from_create(cls, secret_create: SecretCreation) -> 'Secret':
-
-        hashed_password = CryptoService().hash_password(
-            secret_create.password
-        )
+        hashed_password = CryptoService().hash_password(secret_create.password)
         reg_date = str(datetime.now().isoformat())
 
         s = Secret(

@@ -13,7 +13,6 @@ app = FastAPI()
 app.include_router(api_router)
 register_exception_handlers(app)
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -23,4 +22,4 @@ app.add_middleware(
 )
 
 if __name__ == '__main__':
-    uvicorn.run(app, host=settings.DEPLOY_HOST, port=settings.DEPLOY_PORT)
+    uvicorn.run(app, host=settings.HOST, port=settings.PORT)

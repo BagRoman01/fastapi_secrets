@@ -1,19 +1,23 @@
 import logging.config
 import os
+from pathlib import Path
+
 import yaml
 
 log = logging.getLogger(__name__)
 
 
 def setup_logging(
-        default_path='./../logging.yaml',
-        default_level=logging.DEBUG
-):
+        default_path: str = './../logging.yaml',
+        default_level: int = logging.DEBUG
+) -> None:
     """Функция для загрузки конфигурации логирования из файла YAML"""
-    absolute_path = os.path.abspath(default_path)
-    log.info(f'Путь к конфигурационному файлу logging: {absolute_path}')
+    log.info(f'Путь к конфигурационному файлу logging: {default_path}')
 
     try:
+        log_dir = Path("logs")
+        log_dir.mkdir(parents=True, exist_ok=True)
+
         with open(default_path, encoding='utf-8') as f:
             config = yaml.safe_load(f)
             logging.config.dictConfig(config)

@@ -93,6 +93,7 @@ lib64/
 parts/
 sdist/
 var/
+logs/
 wheels/
 share/python-wheels/
 *.egg-info/
@@ -219,3 +220,6 @@ version_info.txt
 pyproject.toml.backup
 original_commit.txt
 no_bump.flag
+/src/logs/
+/src/logs/
+/src/logs/
