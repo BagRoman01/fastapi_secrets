@@ -1,8 +1,8 @@
 import pytest
 
-from app.database.repositories.secret_repository import SecretRepository
-from app.models.schemas.secret import SecretCreate
-from app.models.tables.secret import Secret
+from src.database.repositories.secret_repository import SecretRepository
+from src.models.schemas.secret import SecretCreate
+from src.models.tables.secret import Secret
 
 pytestmark = pytest.mark.asyncio(loop_scope='session')
 
