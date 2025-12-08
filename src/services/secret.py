@@ -24,11 +24,17 @@ class SecretService:
             secret_creation: SecretCreation
     ) -> SecretInfo:
         """Создание нового секрета с паролем."""
-        secret_creation.secret = self._crypto_service.encrypt_secret(
+        encrypted_secret = self._crypto_service.encrypt_secret(
             secret_creation.secret,
             secret_creation.password
         )
-        s: Secret = Secret.from_create(secret_creation)
+        hashed_pwd = self._crypto_service.hash_password(
+            secret_creation.password
+        )
+        s: Secret = Secret.from_create(
+            secret=encrypted_secret,
+            hashed_pwd=hashed_pwd,
+        )
         self._db.add(s)
         await self._db.flush()
         await self._db.refresh(s)

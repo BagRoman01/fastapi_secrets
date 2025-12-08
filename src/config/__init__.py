@@ -32,9 +32,23 @@ class Settings(BaseSettings):
             _env_file_encoding='utf-8'
         )
 
+def load_settings() -> Settings:
+    """Загружает настройки с проверкой валидности"""
+    try:
+        return Settings()
+    except ValidationError as e:
+        print('ОШИБКА: Неверная конфигурация приложения!')
+        print('Проверьте файл .env или переменные окружения:')
+        for error in e.errors():
+            field = error['loc'][0]
+            msg = error['msg']
+            print(f"  - {field}: {msg}")
+        raise ValueError("Конфигурация приложения невалидна") from e
+    except Exception as e:
+        print(f'ОШИБКА: Не удалось загрузить конфигурацию: {e}')
+        raise ValueError("Не удалось инициализировать настройки") from e
 
-try:
-    settings = Settings()
-except ValidationError as e:
-    print('Ошибка в настройках. Проверьте файл или переменные окружения:')
-    print(e.errors())
+
+settings = load_settings()
+
+

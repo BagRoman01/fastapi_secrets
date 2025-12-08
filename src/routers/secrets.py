@@ -16,7 +16,7 @@ async def unsecret(
     secret_unlock: SecretUnlock,
     secret_srv: SecretService = Depends(acquire_services().secrets),
 ) -> SecretPublicView:
-    """Reads the secret and then deletes it."""
+    """Разблокирует секрет и удаляет его"""
     return await secret_srv.unsecret(
         secret_id=secret_id,
         secret_data=SecretUnlock(password=secret_unlock.password)
@@ -28,5 +28,5 @@ async def create_secret(
     secret_create: SecretCreation,
     secret_srv: SecretService = Depends(acquire_services().secrets),
 ) -> SecretInfo:
-    """Create new secret with given credentials."""
+    """Создает секрет с содержимым и паролем"""
     return await secret_srv.create_secret(secret_creation=secret_create)

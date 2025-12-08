@@ -1,7 +1,6 @@
 import uuid
 from sqlmodel import SQLModel, Field
 from datetime import datetime
-from src.services.security import CryptoService
 
 
 class SecretBase(SQLModel):
@@ -37,13 +36,12 @@ class Secret(SecretBase, table=True):
     reg_date: str | None = Field(default=None)
 
     @classmethod
-    def from_create(cls, secret_create: SecretCreation) -> 'Secret':
-        hashed_password = CryptoService().hash_password(secret_create.password)
+    def from_create(cls, secret, hashed_pwd) -> 'Secret':
         reg_date = str(datetime.now().isoformat())
 
         s = Secret(
-            secret=secret_create.secret,
-            hashed_password=hashed_password,
+            secret=secret,
+            hashed_password=hashed_pwd,
             reg_date=reg_date,
         )
         return s
