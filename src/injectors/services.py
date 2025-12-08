@@ -2,23 +2,14 @@ from typing import AsyncGenerator, Any
 from src.injectors.pg import AsyncPgConnectionInj
 from src.services import SecretService, CryptoService
 
-class CryptoServiceInjector:
-    def __init__(self):
-        self._crypto_service = CryptoService()
-
-    def get_crypto_service(self) -> CryptoService:
-        return self._crypto_service
-
-class AsyncServiceInjector:
+class ServiceInjector:
     def __init__(
             self,
             conns_inj: AsyncPgConnectionInj,
-            crypto_inj: CryptoServiceInjector
     ):
         self._conns = conns_inj
-        self._crypto_inj = crypto_inj
 
-    async def __aenter__(self) -> 'AsyncServiceInjector':
+    async def __aenter__(self) -> 'ServiceInjector':
         """Инициализация подключений при старте приложения"""
         await self._conns.setup()
         return self
@@ -29,11 +20,15 @@ class AsyncServiceInjector:
             await self._conns.disconnect()
         return False
 
+    @staticmethod
+    def get_crypto_service() -> CryptoService:
+        return CryptoService()
+
     async def secrets(self) -> AsyncGenerator[SecretService, Any]:
         if not self._conns:
             raise RuntimeError("Connections not initialized")
         async with self._conns.acquire_session() as session:
             yield SecretService(
                 session,
-                self._crypto_inj.get_crypto_service()
+                self.get_crypto_service()
             )
